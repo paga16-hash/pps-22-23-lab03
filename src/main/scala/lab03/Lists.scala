@@ -1,5 +1,6 @@
 package lab03
 
+import scala.:+
 import scala.annotation.tailrec
 
 object Lists extends App :
@@ -30,6 +31,15 @@ object Lists extends App :
       case Cons(_, t) => drop(t, n - 1)
       case Nil() => Nil()
 
+    def append[A](l: List[A], r: List[A]): List[A] = (l, r) match
+      case (Nil(), r) => r
+      case (Cons(h, t), r) => Cons(h, append(t, r))
+
+    def flatMap[A, B](l: List[A])(f: A => List[B]): List[B] = l match
+      case Nil() => Nil()
+      case Cons(h, Nil()) => f(h)
+      case Cons(h, t) => append(f(h), flatMap(t)(f))
+      //case Cons(h, t) => Cons(f(h).productElement(0).asInstanceOf[B], t); flatMap2(t)(f)
 
 
 

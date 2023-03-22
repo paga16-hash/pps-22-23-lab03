@@ -2,6 +2,7 @@ package lab03
 
 import scala.:+
 import scala.annotation.tailrec
+import u02.Optionals.Option.*
 
 object Lists extends App :
 
@@ -41,6 +42,10 @@ object Lists extends App :
       case Cons(h, t) => append(f(h), flatMap(t)(f))
       //case Cons(h, t) => Cons(f(h).productElement(0).asInstanceOf[B], t); flatMap2(t)(f)
 
+    import u02.Optionals.*
+    def max(l: List[Int]): Option[Int] = l match
+      case Nil() => None()
+      case l => Some(0)
 
 
 

@@ -33,9 +33,14 @@ class ListTest:
     assertEquals(l, append(l, Nil()))
   // Cons (10 , Cons (20 , Cons (30 , Cons (40 , Nil ()))))
 
-  @Test def testFlatMap2(): Unit =
+  @Test def testFlatMap(): Unit =
     assertEquals(Cons(11, Cons(21, Cons(31, Nil()))), flatMap(l)(v => Cons(v + 1, Nil())))
     assertEquals(Cons(11, Cons(12, Cons(21, Cons(22, Cons(31, Cons(32, Nil())))))), flatMap(l)(v => Cons(v + 1, Cons(v + 2, Nil()))))
+
+  @Test def testMax(): Unit =
+    import u02.Optionals.Option.*
+    assertEquals(None(), max(Nil()))
+    assertEquals(Some(25), max(Cons(10, Cons(25, Cons(20, Nil())))))
 
 
 

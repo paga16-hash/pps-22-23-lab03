@@ -124,12 +124,8 @@ object Lists extends App :
 
     def constant[A](c: A): Stream[A] = iterate(c)(c => c)
 
+    val fibs: Stream[Int] = ???
+    
+
 
   end Stream
-
-  val l = List.Cons(10, List.Cons(20, List.Cons(30, List.Nil())))
-  println(List.sum(l)) // 60
-
-  import List.*
-
-  println(sum(map(filter(l)(_ >= 20))(_ + 1))) // 21+31 = 52

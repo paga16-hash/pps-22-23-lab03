@@ -81,6 +81,7 @@ class ListTest:
     val l = Cons("x", Cons("x", Cons("x", Cons("x", Cons("x", Nil())))))
     assertEquals(l, Stream.toList(Stream.take(constant("x"))(5)))
 
-
-
-
+  @Test
+  def testStreamFibs(): Unit =
+    val l = Cons(0, Cons(1, Cons(1, Cons(2, Cons(3, Cons(5, Cons(8, Cons(13, Nil()))))))))
+    assertEquals(l, Stream.toList(Stream.take(fibs)(8)))

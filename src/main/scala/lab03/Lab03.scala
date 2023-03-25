@@ -7,14 +7,12 @@ import scala.:+
 import scala.annotation.tailrec
 import u02.Optionals.Option.*
 
-object Lists extends App :
+object Lab03 extends App :
 
-  // A generic linkedlist
   enum List[E]:
     case Cons(head: E, tail: List[E])
     case Nil()
 
-  // a companion object (i.e., module) for List
   object List:
 
     def sum(l: List[Int]): Int = l match
@@ -25,52 +23,69 @@ object Lists extends App :
       case Cons(h, t) => Cons(mapper(h), map(t)(mapper))
       case Nil() => Nil()
 
-    def filter[A](l1: List[A])(pred: A => Boolean): List[A] = l1 match
+    def filter[A](l: List[A])(pred: A => Boolean): List[A] = l match
       case Cons(h, t) if pred(h) => Cons(h, filter(t)(pred))
       case Cons(_, t) => filter(t)(pred)
       case Nil() => Nil()
 
+    //Task 1a
     @tailrec
     def drop[A](l1: List[A], n: Int): List[A] = l1 match
       case Cons(h, t) if n == 0 => Cons(h, t)
       case Cons(_, t) => drop(t, n - 1)
       case Nil() => Nil()
 
+    //Task 1b
     def append[A](l: List[A], r: List[A]): List[A] = (l, r) match
       case (Nil(), r) => r
       case (Cons(h, t), r) => Cons(h, append(t, r))
 
+    //Task 1c
     def flatMap[A, B](l: List[A])(f: A => List[B]): List[B] = l match
       case Nil() => Nil()
       case Cons(h, Nil()) => f(h)
       case Cons(h, t) => append(f(h), flatMap(t)(f))
-    //case Cons(h, t) => Cons(f(h).productElement(0).asInstanceOf[B], t); flatMap2(t)(f)
+
+    //Task 1d
+    def mapFM[A, B](l: List[A])(mapper: A => B): List[B] =
+      flatMap(l)(h => Cons(mapper(h), Nil()))
+
+    //Task 1d
+    def filterFM[A](l: List[A])(pred: A => Boolean): List[A] =
+      flatMap(l)(h => h match
+        case h if pred(h) => Cons(h, Nil())
+        case _ => Nil()
+      )
 
     import u02.Optionals.*
 
+    //Task 2
     def max(l: List[Int]): Option[Int] =
       @tailrec
-      def intMax(l: List[Int], acc: Option[Int]): Option[Int] = (l, acc) match
-        case (Cons(h, t), None()) => intMax(t, Some(h))
-        case (Cons(h, t), acc) if h > orElse(acc, h) => intMax(t, Some(h))
+      def max(l: List[Int], acc: Option[Int]): Option[Int] = (l, acc) match
+        case (Cons(h, t), None()) => max(t, Some(h))
+        case (Cons(h, t), acc) if h > orElse(acc, h) => max(t, Some(h))
         case (Cons(_, Nil()), _) | (Nil(), _) => acc
-        case (Cons(_, t), acc) => intMax(t, acc)
+        case (Cons(_, t), acc) => max(t, acc)
 
-      intMax(l, None())
+      max(l, None())
 
     import u02.Modules.Person.*
 
+    //Task 3 with FM
     def getCourses(l: List[Person]): List[String] =
       flatMap(l) {
         case t: Person.Teacher => Cons(t.course, Nil())
         case _ => Nil()
       }
 
+    //Task 4a
     @tailrec
     def foldLeft[A](l: List[A])(acc: A)(bin: (A, A) => A): A = l match
       case Cons(h, t) => foldLeft(t)(bin(acc, h))(bin)
       case Nil() => acc
 
+    //Task 4b, without using foldLeft
     def foldRight[A](l: List[A])(acc: A)(bin: (A, A) => A): A = l match
       case Cons(h, t) => bin(h, foldRight(t)(acc)(bin))
       case Nil() => acc
@@ -108,19 +123,20 @@ object Lists extends App :
     def iterate[A](init: => A)(next: A => A): Stream[A] =
       cons(init, iterate(next(init))(next))
 
+    //Task 5
     @tailrec
     def drop[A](stream: Stream[A])(n: Int): Stream[A] = (stream, n) match
       case (Cons(_, t), n) if n != 0 => drop(t())(n - 1)
       case (stream, 0) => stream
       case _ => Empty()
 
+    //Task 6
     def constant[A](c: A): Stream[A] = iterate(c)(c => c)
 
-    def fibst: Stream[Int] =
-      def fibst(n1: Int, n2: Int): Stream[Int] = (n1, n2) match
-        case (0, 1) => cons(0, fibst(n2, n1 + n2))
-        case (n1, n2) => cons(n1, fibst(n2, n1 + n2))
+    //Task 7
+    def fibs: Stream[Int] =
+      def fibs(n1: Int, n2: Int): Stream[Int] = cons(n1, fibs(n2, n1 + n2))
 
-      fibst(0, 1)
+      fibs(0, 1)
 
   end Stream

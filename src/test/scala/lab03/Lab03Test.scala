@@ -2,11 +2,11 @@ package lab03
 
 import org.junit.*
 import org.junit.Assert.*
-import lab03.Lists.*
-import lab03.Lists.List.flatMap
+import lab03.Lab03.*
+import lab03.Lab03.List.flatMap
 import u02.Modules.Person
 
-class ListTest:
+class Lab03Test:
 
   import List.*
 
@@ -20,9 +20,17 @@ class ListTest:
     assertEquals(Cons(11, Cons(21, Cons(31, Nil()))), map(l)(_ + 1))
     assertEquals(Cons("10", Cons("20", Cons("30", Nil()))), map(l)(_ + ""))
 
+  @Test def testMapFM(): Unit =
+    assertEquals(Cons(11, Cons(21, Cons(31, Nil()))), mapFM(l)(_ + 1))
+    assertEquals(Cons("10", Cons("20", Cons("30", Nil()))), mapFM(l)(_ + ""))
+
   @Test def testFilter(): Unit =
     assertEquals(Cons(20, Cons(30, Nil())), filter(l)(_ >= 20))
     assertEquals(Cons(10, Cons(30, Nil())), filter(l)(_ != 20))
+
+  @Test def testFilterFM(): Unit =
+    assertEquals(Cons(20, Cons(30, Nil())), filterFM(l)(_ >= 20))
+    assertEquals(Cons(10, Cons(30, Nil())), filterFM(l)(_ != 20))
 
   @Test def testDrop(): Unit =
     assertEquals(Cons(20, Cons(30, Nil())), drop(l, 1))
@@ -62,13 +70,11 @@ class ListTest:
 
   @Test
   def testFoldRight(): Unit =
-    //val lt = Cons(5, Cons(1, Cons(7, Cons(3, Nil()))))
-    //assertEquals(-8, foldLeft(lt)(0)(_ - _))
     val lt = Cons(3, Cons(7, Cons(1, Cons(5, Nil()))))
     assertEquals(-8, foldRight(lt)(0)(_ - _))
     assertEquals(16, foldRight(lt)(0)(_ + _))
 
-  import lab03.Lists.Stream.*
+  import lab03.Lab03.Stream.*
 
   @Test
   def testStreamDrop(): Unit =
@@ -84,4 +90,4 @@ class ListTest:
   @Test
   def testStreamFibs(): Unit =
     val l = Cons(0, Cons(1, Cons(1, Cons(2, Cons(3, Cons(5, Cons(8, Cons(13, Nil()))))))))
-    assertEquals(l, Stream.toList(Stream.take(fibst)(8)))
+    assertEquals(l, Stream.toList(Stream.take(fibs)(8)))

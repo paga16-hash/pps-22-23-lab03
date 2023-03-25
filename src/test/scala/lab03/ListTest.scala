@@ -84,4 +84,4 @@ class ListTest:
   @Test
   def testStreamFibs(): Unit =
     val l = Cons(0, Cons(1, Cons(1, Cons(2, Cons(3, Cons(5, Cons(8, Cons(13, Nil()))))))))
-    assertEquals(l, Stream.toList(Stream.take(fibs)(8)))
+    assertEquals(l, Stream.toList(Stream.take(fibst)(8)))

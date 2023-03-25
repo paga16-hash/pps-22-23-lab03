@@ -53,7 +53,7 @@ object Lists extends App :
       def intMax(l: List[Int], acc: Option[Int]): Option[Int] = (l, acc) match
         case (Cons(h, t), None()) => intMax(t, Some(h))
         case (Cons(h, t), acc) if h > orElse(acc, h) => intMax(t, Some(h))
-        case (Cons(_, Nil()), acc) => acc
+        case (Cons(_, Nil()), _) | (Nil(), _) => acc
         case (Cons(_, t), acc) => intMax(t, acc)
 
       intMax(l, None())
@@ -67,21 +67,13 @@ object Lists extends App :
       }
 
     @tailrec
-    def foldLeft(l: List[Int])(acc: Int)(bin: (Int, Int) => Int): Int = l match
+    def foldLeft[A](l: List[A])(acc: A)(bin: (A, A) => A): A = l match
       case Cons(h, t) => foldLeft(t)(bin(acc, h))(bin)
       case Nil() => acc
 
-
-    // 3 + (7 + (1 + (5 + 0)))
-    /*@tailrec
-    def foldRight(l: List[Int])(acc: Int)(bin: (Int, Int) => Int): Int = l match
-      case Cons(h, t) => foldRight(t)(bin(acc, h) * -1)(bin);
-      case Nil() => acc * -1*/
-
-    @tailrec
-    def foldRight(l: List[Int])(acc: Int)(bin: (Int, Int) => Int): Int = l match
-      case Cons(h, t) => foldRight(t)(bin(acc, h) * -1)(bin);
-      case Nil() => acc * -1
+    def foldRight[A](l: List[A])(acc: A)(bin: (A, A) => A): A = l match
+      case Cons(h, t) => bin(h, foldRight(t)(acc)(bin))
+      case Nil() => acc
 
   enum Stream[A]:
     private case Empty()
@@ -124,8 +116,11 @@ object Lists extends App :
 
     def constant[A](c: A): Stream[A] = iterate(c)(c => c)
 
-    val fibs: Stream[Int] = ???
-    
+    def fibst: Stream[Int] =
+      def fibst(n1: Int, n2: Int): Stream[Int] = (n1, n2) match
+        case (0, 1) => cons(0, fibst(n2, n1 + n2))
+        case (n1, n2) => cons(n1, fibst(n2, n1 + n2))
 
+      fibst(0, 1)
 
   end Stream

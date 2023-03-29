@@ -30,20 +30,18 @@ object Lab03 extends App :
 
     //Task 1a
     @tailrec
-    def drop[A](l1: List[A], n: Int): List[A] = l1 match
-      case Cons(h, t) if n == 0 => Cons(h, t)
-      case Cons(_, t) => drop(t, n - 1)
+    def drop[A](l: List[A], n: Int): List[A] = l match
+      case Cons(h, t) => if n == 0 then Cons(h, t) else drop(t, n - 1)
       case Nil() => Nil()
 
     //Task 1b
-    def append[A](l: List[A], r: List[A]): List[A] = (l, r) match
-      case (Nil(), r) => r
-      case (Cons(h, t), r) => Cons(h, append(t, r))
+    def append[A](l: List[A], r: List[A]): List[A] = l match
+      case Nil() => r
+      case Cons(h, t) => Cons(h, append(t, r))
 
     //Task 1c
     def flatMap[A, B](l: List[A])(f: A => List[B]): List[B] = l match
       case Nil() => Nil()
-      case Cons(h, Nil()) => f(h)
       case Cons(h, t) => append(f(h), flatMap(t)(f))
 
     //Task 1d
@@ -116,8 +114,8 @@ object Lab03 extends App :
       case Cons(head, tail) => filter(tail())(pred)
       case _ => Empty()
 
-    def take[A](stream: Stream[A])(n: Int): Stream[A] = (stream, n) match
-      case (Cons(head, tail), n) if n > 0 => cons(head(), take(tail())(n - 1))
+    def take[A](stream: Stream[A])(n: Int): Stream[A] = stream match
+      case Cons(h, t) if n > 0 => cons(h(), take(t())(n - 1))
       case _ => Empty()
 
     def iterate[A](init: => A)(next: A => A): Stream[A] =
